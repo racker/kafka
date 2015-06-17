@@ -42,6 +42,11 @@ allprojects {
   repositories {
     mavenCentral()
   }
+  gradle.projectsEvaluated {
+    tasks.withType(JavaCompile) {
+      options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    }
+  }
 }
 
 ext {
@@ -580,7 +585,6 @@ project(':log4j-appender') {
 }
 
 project(':connect:api') {
-  apply plugin: 'checkstyle'
   archivesBaseName = "connect-api"
 
   dependencies {
@@ -629,15 +633,9 @@ project(':connect:api') {
   configurations {
     archives.extendsFrom (testCompile)
   }
-
-  checkstyle {
-    configFile = new File(rootDir, "checkstyle/checkstyle.xml")
-  }
-  test.dependsOn('checkstyleMain', 'checkstyleTest')
 }
 
 project(':connect:json') {
-  apply plugin: 'checkstyle'
   archivesBaseName = "connect-json"
 
   dependencies {
@@ -691,14 +689,9 @@ project(':connect:json') {
     archives.extendsFrom(testCompile)
   }
 
-  checkstyle {
-    configFile = new File(rootDir, "checkstyle/checkstyle.xml")
-  }
-  test.dependsOn('checkstyleMain', 'checkstyleTest')
 }
 
 project(':connect:runtime') {
-  apply plugin: 'checkstyle'
   archivesBaseName = "connect-runtime"
 
   dependencies {
@@ -759,11 +752,6 @@ project(':connect:runtime') {
     archives.extendsFrom(testCompile)
   }
 
-  checkstyle {
-    configFile = new File(rootDir, "checkstyle/checkstyle.xml")
-  }
-  test.dependsOn('checkstyleMain', 'checkstyleTest')
-
   tasks.create(name: "genConnectConfigDocs", dependsOn:jar, type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'org.apache.kafka.connect.runtime.distributed.DistributedConfig'
@@ -772,7 +760,6 @@ project(':connect:runtime') {
 }
 
 project(':connect:file') {
-  apply plugin: 'checkstyle'
   archivesBaseName = "connect-file"
 
   dependencies {
@@ -824,9 +811,4 @@ project(':connect:file') {
   configurations {
     archives.extendsFrom(testCompile)
   }
-
-  checkstyle {
-    configFile = new File(rootDir, "checkstyle/checkstyle.xml")
-  }
-  test.dependsOn('checkstyleMain', 'checkstyleTest')
 }
